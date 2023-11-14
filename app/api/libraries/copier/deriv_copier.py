@@ -63,3 +63,19 @@ async def deriv_get_trader_list(DERIV_TOKEN, APP_ID):
     await api.clear()
     
     return data
+
+
+
+async def deriv_get_account_balance(DERIV_TOKEN, APP_ID):
+    # Run the sample calls
+    api = await __initialize_api(APP_ID)
+    await __authorize_with_token(api, DERIV_TOKEN)
+    
+    balance_args = {
+        "balance": 1
+    }
+    
+    data = await api.balance(balance_args)
+    await api.clear()
+    
+    return data['balance']['balance']

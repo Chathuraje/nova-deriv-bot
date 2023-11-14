@@ -5,6 +5,7 @@ class CopierDB(BaseModel):
     account_id: str
     name: str
     email: EmailStr
+    account_balance: float = 0.0
     api_key: str
     trader_id: str  # Reference to the TraderDB model
     status: bool = False

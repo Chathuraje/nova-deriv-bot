@@ -5,7 +5,8 @@ from app.api.schemas.copierSchema import individual_copier, list_copiers
 from app.api.libraries.copier.deriv_copier import (
     deriv_set_copier_active,
     deriv_set_copier_inactive,
-    deriv_get_trader_list
+    deriv_get_trader_list,
+    deriv_get_account_balance,
 )
 from app.api.config.hashing import decrypt
 import asyncio
@@ -34,6 +35,8 @@ async def create_copier(copier: CopierDB):
     if not trader_exists:
         # Return a message indicating that the associated trader doesn't exist
         return "Trader does not exist"
+    
+    copier.account_balance = await deriv_get_account_balance(decrypt(copier.api_key), trader_exists["app_id"])
     
     # Convert the copier object to a dictionary and insert it into the database
     copier_dict = dict(copier)

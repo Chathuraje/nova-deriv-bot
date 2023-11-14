@@ -18,11 +18,12 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Set up environment variables
-      run: |
-        echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
-        echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
-        echo "DB_URI=${{ secrets.DB_URI }}" >> .env
-        echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
+    - name: Create .env file
+      uses: ozaytsev86/create-env-file@v1
+      with:
+        DB_USERNAME: ${{ secrets.DB_USERNAME  }}
+        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        DB_URI: ${{ secrets.DB_URI }}
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
 
     # Add other steps as needed for your build process

@@ -12,6 +12,11 @@ router = APIRouter(
 async def change_copier_trader(copier_id: str, new_trader_id: str):
     return await copier.change_copier_trader(copier_id, new_trader_id)
 
+@router.put("/update_account_balance/{copier_id}")
+async def update_account_balance(copier_id: str):
+    return await copier.update_account_balance(copier_id)
+
+
 # Endpoint to set a copier as active
 @router.put("/set_copier_active/{copier_id}")
 async def set_copier_active(copier_id: str):

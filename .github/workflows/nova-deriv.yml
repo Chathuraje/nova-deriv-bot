@@ -1,4 +1,4 @@
-name: Nova Deriv Copy Trading Platfom
+name: Nova Deriv Copy Trading Platform
 
 on:
   push:
@@ -17,3 +17,12 @@ jobs:
         source venv/bin/activate
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+
+    - name: Set up environment variables
+      run: |
+        echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
+        echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+        echo "DB_URI=${{ secrets.DB_URI }}" >> .env
+        echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
+
+    # Add other steps as needed for your build process

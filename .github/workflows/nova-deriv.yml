@@ -1,4 +1,4 @@
-name: Django CI
+name: Nova Deriv Copy Trading Platfom
 
 on:
   push:

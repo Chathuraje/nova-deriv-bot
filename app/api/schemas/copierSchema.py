@@ -10,6 +10,7 @@ def individual_copier(copier):
         "account_id": copier["account_id"],
         "name": copier["name"],
         "email": copier["email"],
+        "account_balance": copier["account_balance"],
         "api_key": copier["api_key"],
         "status": copier["status"],
         "trader": {

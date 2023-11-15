@@ -5,7 +5,9 @@ from app.api.schemas.copierSchema import individual_copier, list_copiers
 from app.api.libraries.copier.deriv_copier import (
     deriv_set_copier_active,
     deriv_set_copier_inactive,
-    deriv_get_trader_list
+    deriv_get_trader_list,
+    deriv_get_account_balance,
+    deriv_withdraw
 )
 from app.api.config.hashing import decrypt
 import asyncio
@@ -214,3 +216,48 @@ async def set_copier_inactive(copier_id: str):
     )
     # Return the updated copier details
     return "copier set to inactive"
+
+
+async def update_account_balance(copier_id: str):
+    copier_exists = copier_collection.find_one({"_id": ObjectId(copier_id)})
+    
+    if not copier_exists:
+        # Return a message indicating that the associated trader doesn't exist
+        return "copier does not exist"
+    
+    # Check if the associated trader exists
+    trader_exists = trader_collection.find_one({"_id": ObjectId(copier_exists["trader_id"])})
+
+    if not trader_exists:
+        # Return a message indicating that the associated trader doesn't exist
+        return "Trader does not exist"
+    
+    account_balance = await deriv_get_account_balance(decrypt(copier_exists["api_key"]), trader_exists["app_id"])
+    
+    # Update the copier in the database and retrieve the updated document
+    updated_copier = copier_collection.find_one_and_update(
+        {"_id": ObjectId(copier_id)},
+    {"$set": {"account_balance": account_balance}},
+        return_document=True
+    )
+    # Return the updated copier details
+    return individual_copier(updated_copier)
+
+async def withdraw(copier_id, amount, withdrawal_account_name):
+    copier_exists = copier_collection.find_one({"_id": ObjectId(copier_id)})
+    
+    if not copier_exists:
+        # Return a message indicating that the associated trader doesn't exist
+        return "copier does not exist"
+    
+    # Check if the associated trader exists
+    trader_exists = trader_collection.find_one({"_id": ObjectId(copier_exists["trader_id"])})
+
+    if not trader_exists:
+        # Return a message indicating that the associated trader doesn't exist
+        return "Trader does not exist"
+    
+    await deriv_withdraw(decrypt(copier_exists["api_key"]), trader_exists["app_id"], amount, withdrawal_account_name)
+    
+    return "withdraw"
+    

@@ -6,7 +6,8 @@ from app.api.libraries.copier.deriv_copier import (
     deriv_set_copier_active,
     deriv_set_copier_inactive,
     deriv_get_trader_list,
-    deriv_get_account_balance
+    deriv_get_account_balance,
+    deriv_withdraw
 )
 from app.api.config.hashing import decrypt
 import asyncio
@@ -241,5 +242,22 @@ async def update_account_balance(copier_id: str):
     )
     # Return the updated copier details
     return individual_copier(updated_copier)
+
+async def withdraw(copier_id, amount, withdrawal_account_name):
+    copier_exists = copier_collection.find_one({"_id": ObjectId(copier_id)})
     
-    return account_balance
+    if not copier_exists:
+        # Return a message indicating that the associated trader doesn't exist
+        return "copier does not exist"
+    
+    # Check if the associated trader exists
+    trader_exists = trader_collection.find_one({"_id": ObjectId(copier_exists["trader_id"])})
+
+    if not trader_exists:
+        # Return a message indicating that the associated trader doesn't exist
+        return "Trader does not exist"
+    
+    await deriv_withdraw(decrypt(copier_exists["api_key"]), trader_exists["app_id"], amount, withdrawal_account_name)
+    
+    return "withdraw"
+    

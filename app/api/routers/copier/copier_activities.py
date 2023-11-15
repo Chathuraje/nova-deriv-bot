@@ -46,3 +46,8 @@ async def get_active_copiers():
 @router.get("/get_connected_trader_list/{copier_id}")
 async def get_connected_trader_list(copier_id: str):
     return await copier.get_connected_trader_list(copier_id)
+
+
+@router.get("/withdraw")
+async def withdraw(copier_id: str, amount: float, withdrawal_account_name: str):
+    return await copier.withdraw(copier_id, amount, withdrawal_account_name)
